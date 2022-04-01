@@ -24,7 +24,6 @@ app.get('/api/v1/starredMovies', (request, response) => {
   response.json({ movies })
 })
 
-
 // POST new favorite movie
 // -> will send new POST request when user selects star on movie detail page
 
@@ -36,6 +35,11 @@ app.post('/api/v1/starredMovies', (request, response) => {
       response
         .status(422)
         .send({ error: `Expected format: { id: <Number>, title: <String>, poster_path: <String> }. You're missing a "${requiredParameter}" property.` });
+    } else if (app.locals.starredMovies.includes(movie[requiredParameter])) {
+      console.log('I work')
+      response
+        .status(422)
+        .send({ error: `A movie with "${requiredParameter}" already exists.` });
     }
   }
 
