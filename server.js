@@ -35,14 +35,15 @@ app.post('/api/v1/starredMovies', (request, response) => {
       response
         .status(422)
         .send({ error: `Expected format: { id: <Number>, title: <String>, poster_path: <String> }. You're missing a "${requiredParameter}" property.` });
-    } else if (app.locals.starredMovies.includes(movie[requiredParameter])) {
-      console.log('I work')
-      response
-        .status(422)
-        .send({ error: `A movie with "${requiredParameter}" already exists.` });
     }
   }
 
+  if (app.locals.starredMovies.find(starMovie => starMovie.id === movie.id)) {
+    return response
+      .status(422)
+      .send({ error: `A movie with "${starMovie.id}" already exists.` });
+  }
+  
   const { id, title, poster_path } = movie;
   app.locals.starredMovies.push({ id, title, poster_path });
   response.status(201).json({ id, title, poster_path });
